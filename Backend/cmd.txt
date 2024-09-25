@@ -1,0 +1,14 @@
+1) In WSL start redis server
+    -redis-server
+
+2) run flask app
+    -flask run
+
+3) run frontend
+    -npm run dev 
+
+4) start celery worker
+    -celery -A app:celery worker --loglevel=info -P eventlet
+
+5) start celery beat
+    -celery -A app:celery beat --loglevel=info
