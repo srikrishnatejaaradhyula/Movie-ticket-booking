@@ -1,0 +1,618 @@
+openapi: 3.0.3
+info:
+  title: Ticket Show Appliction
+  description: |-
+    This a web appliction api
+  version: 1.0.11
+servers:
+  - url: https://127.0.0.1:5000
+tags:
+  - name: auth
+    description: Authentication endpoints
+  - name: venue
+    description: Venue endpoints
+  - name: show
+    description: Show endpoints
+  - name: booking
+    description: Bookings endpoints
+paths:
+  /api/user_login:
+    post:
+      summary: User Login
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      security: []
+  /api/admin_login:
+    post:
+      summary: Admin Login
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+        '400':
+          description: Invalid username or password
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+      security: []
+  /api/user_register:
+    post:
+      summary: User Registration
+      tags:
+        - auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - name
+                - email
+                - password
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Email already in use
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /api/create_venue:
+    post:
+      summary: Create Venue
+      tags:
+        - venue
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                place:
+                  type: string
+                location:
+                  type: string
+                capacity:
+                  type: integer
+                admin_id:
+                  type: integer
+              required:
+                - name
+                - place
+                - location
+                - capacity
+                - admin_id
+      responses:
+        '200':
+          description: Venue created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /api/get_venue:
+    post:
+      summary: Get Venue
+      tags:
+        - venue
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                admin_id:
+                  type: integer
+              required:
+                - admin_id
+      responses:
+        '200':
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    place:
+                      type: string
+                    location:
+                      type: string
+                    capacity:
+                      type: integer
+  /api/get_all_venue:
+    get:
+      summary: Get All Venues
+      tags:
+        - venue
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    place:
+                      type: string
+                    location:
+                      type: string
+                    capacity:
+                      type: integer
+  /api/get_venue_by_id:
+    post:
+      summary: Get Venue by ID
+      tags:
+        - venue
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                venue_id:
+                  type: integer
+              required:
+                - venue_id
+      responses:
+        '200':
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  place:
+                    type: string
+                  location:
+                    type: string
+                  capacity:
+                    type: integer
+  /api/update_venue:
+    post:
+      summary: Update Venue
+      tags:
+        - venue
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                venue_id:
+                  type: integer
+                name:
+                  type: string
+                place:
+                  type: string
+                location:
+                  type: string
+                capacity:
+                  type: integer
+              required:
+                - venue_id
+                - name
+                - place
+                - location
+                - capacity
+      responses:
+        '200':
+          description: Venue updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /api/delete_venue:
+    post:
+      summary: Delete Venue
+      tags:
+        - venue
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                venue_id:
+                  type: integer
+              required:
+                - venue_id
+      responses:
+        '200':
+          description: Venue deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /api/create_show:
+    post:
+      summary: Create Show
+      tags:
+        - show
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                starting_time:
+                  type: string
+                  format: date-time
+                ending_time:
+                  type: string
+                  format: date-time
+                tag:
+                  type: string
+                price:
+                  type: number
+                rating:
+                  type: number
+                venue_id:
+                  type: integer
+              required:
+                - name
+                - starting_time
+                - ending_time
+                - tag
+                - price
+                - rating
+                - venue_id
+      responses:
+        '200':
+          description: Show created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /api/get_show:
+    post:
+      summary: Get Show
+      tags:
+        - show
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                venue_id:
+                  type: integer
+              required:
+                - venue_id
+      responses:
+        '200':
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    starting_time:
+                      type: string
+                    ending_time:
+                      type: string
+                    common_date:
+                      type: string
+                    time_range:
+                      type: string
+                    tag:
+                      type: string
+                    price:
+                      type: number
+                    rating:
+                      type: number
+                    available_seats:
+                      type: integer
+  /api/update_show:
+    post:
+      summary: Update Show
+      tags:
+        - show
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                show_id:
+                  type: integer
+                name:
+                  type: string
+                starting_time:
+                  type: string
+                  format: date-time
+                ending_time:
+                  type: string
+                  format: date-time
+                tag:
+                  type: string
+                price:
+                  type: number
+                rating:
+                  type: number
+              required:
+                - show_id
+                - name
+                - starting_time
+                - ending_time
+                - tag
+                - price
+                - rating
+      responses:
+        '200':
+          description: Show updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /api/delete_show:
+    post:
+      summary: Delete Show
+      tags:
+        - show
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                show_id:
+                  type: integer
+              required:
+                - show_id
+      responses:
+        '200':
+          description: Show deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /api/book_show:
+    post:
+      summary: Book Show
+      tags:
+        - booking
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seats:
+                  type: integer
+                total_price:
+                  type: number
+                show_id:
+                  type: integer
+                user_id:
+                  type: integer
+              required:
+                - seats
+                - total_price
+                - show_id
+                - user_id
+      responses:
+        '200':
+          description: Show booked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+  /api/get_user_booking:
+    post:
+      summary: Get User Booking
+      tags:
+        - booking
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: integer
+              required:
+                - user_id
+      responses:
+        '200':
+          description: Successful retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    seats:
+                      type: integer
+                    total_price:
+                      type: number
+                    show_id:
+                      type: integer
+                    user_id:
+                      type: integer
+                    rating:
+                      type: number
+                    booking_time:
+                      type: string
+                    seats_booked:
+                      type: integer
+                    show_name:
+                      type: string
+                    show_date:
+                      type: string
+                    show_time:
+                      type: string
+                    venue_name:
+                      type: string
+                    venue_location:
+                      type: string
+                    venue_place:
+                      type: string
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
